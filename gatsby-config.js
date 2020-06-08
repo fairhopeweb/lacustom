@@ -1,3 +1,5 @@
+'use strict';
+const path = require("path")
 module.exports = {
   siteMetadata: {
     title: `Gatsby Default Starter`,
@@ -5,15 +7,43 @@ module.exports = {
     author: `@gatsbyjs`,
   },
   plugins: [
+{
+  resolve: 'gatsby-source-prismic-graphql',
+  options: {
+    repositoryName: 'bep-fwc-pro',
+    pages: {
+      type: 'Page',
+      match: '/:uid',
+      path: '/',
+      component: require.resolve('./src/templates/page.js')
+    }
+    
+  },
+},
+
     `gatsby-plugin-react-helmet`,
     {
-      resolve: `gatsby-source-filesystem`,
+      resolve: '@builder.io/gatsby',
       options: {
+        /** TODO: update this with your API key! */
+        publicAPIKey: '01a1197ee4334a64b7d8c39964046f21pYgdcAnAtgn',
+        // to allow editing on local host
+        custom404Dev: path.resolve('src/pages/404.tsx'),
+        templates: {
+          // Render every `page` model as a new page using the /page.tsx template
+          // based on the URL provided in Builder.io
+          page: path.resolve('src/templates/page.tsx')
+        }
+      },
+    },   
+   { resolve: `gatsby-source-filesystem`,
+             options: {
         name: `images`,
-        path: `${__dirname}/src/images`,
+        path: `${__dirname}/src/`,
       },
     },
-    `gatsby-transformer-sharp`,
+
+  `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
     {
       resolve: `gatsby-plugin-manifest`,
